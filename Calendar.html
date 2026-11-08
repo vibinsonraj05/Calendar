@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendar</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #2c3e50, #bdc3c7);
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calendar {
+    width: 330px;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: purple;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+button {
+    background: white;
+    color: purple;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #eee;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+}
+
+th {
+    color: purple;
+    padding: 6px;
+}
+
+td {
+    text-align: center;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+td:hover {
+    background: #eee;
+}
+</style>
+</head>
+
+<body>
+
+<div class="calendar">
+    <div class="header">
+        <button onclick="prevMonth()">‹</button>
+        <h2 id="monthYear"></h2>
+        <button onclick="nextMonth()">›</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th>
+                <th>Thu</th><th>Fri</th><th>Sat</th>
+            </tr>
+        </thead>
+        <tbody id="calendarBody"></tbody>
+    </table>
+</div>
+
+<script>
+let currentMonth = 0; // January
+let currentYear = 2026;
+
+const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+];
+
+function generateCalendar() {
+    let firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    let totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    document.getElementById("monthYear").innerText =
+        months[currentMonth] + " " + currentYear;
+
+    let body = document.getElementById("calendarBody");
+    body.innerHTML = "";
+
+    let date = 1;
+
+    for (let i = 0; i < 6; i++) {
+        let row = document.createElement("tr");
+
+        for (let j = 0; j < 7; j++) {
+            let cell = document.createElement("td");
+
+            if (i === 0 && j < firstDay) {
+                cell.innerText = "";
+            } else if (date > totalDays) {
+                cell.innerText = "";
+            } else {
+                cell.innerText = date;
+                date++;
+            }
+
+            row.appendChild(cell);
+        }
+
+        body.appendChild(row);
+
+        if (date > totalDays) {
+            break;
+        }
+    }
+}
+
+function prevMonth() {
+    currentMonth--;
+
+    if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+    }
+
+    generateCalendar();
+}
+
+function nextMonth() {
+    currentMonth++;
+
+    if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+    }
+
+    generateCalendar();
+}
+
+generateCalendar();
+</script>
+
+</body>
+</html>
